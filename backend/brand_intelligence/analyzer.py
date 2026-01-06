@@ -1,9 +1,9 @@
-from utils.llm_client import call_llm
-from brand_intelligence.schema import validate_brand_output
-from brand_intelligence.fallback import fallback_brand_profile
-from brand_intelligence.rules import apply_brand_rules
-from brand_intelligence.prompts import build_brand_analysis_prompt
-from brand_intelligence.memory import (
+from backend.utils.llm_client import call_llm
+from backend.brand_intelligence.schema import validate_brand_output
+from backend.brand_intelligence.fallback import fallback_brand_profile
+from backend.brand_intelligence.rules import apply_brand_rules
+from backend.brand_intelligence.prompts import build_brand_analysis_prompt
+from backend.brand_intelligence.memory import (
     get_brand_from_memory,
     save_brand_to_memory
 )
