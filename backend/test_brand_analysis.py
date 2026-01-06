@@ -8,7 +8,8 @@ brand_input = {
     "target_audience": "Working professionals",
     "tone": "premium"
 }
-brand_input["tone"] = "premium"
+
+
 
 
 try:

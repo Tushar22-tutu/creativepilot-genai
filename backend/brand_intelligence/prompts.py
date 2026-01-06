@@ -1,21 +1,39 @@
-BRAND_ANALYSIS_PROMPT = """
-You are an expert brand strategist.
+def build_brand_analysis_prompt(brand_input: dict) -> str:
+    """
+    Builds a strict prompt for local LLMs (Ollama).
+    Forces JSON-only output.
+    """
 
-Analyze the following brand details and generate a structured brand profile.
+    return f"""
+You are a backend AI service.
 
-Return ONLY valid JSON with these exact fields:
-- brand_voice
-- core_emotions
-- target_audience (age_range, pain_points, desires)
-- communication_style
-- cta_style
+TASK:
+Analyze the brand input and return ONLY a valid JSON object.
 
-Brand Details:
+STRICT RULES (MANDATORY):
+- Output ONLY JSON
+- No explanation
+- No markdown
+- No extra text before or after JSON
+- Keys must EXACTLY match this schema
+
+SCHEMA:
+{{
+  "brand_voice": "string",
+  "core_emotions": ["string"],
+  "target_audience": {{
+    "age_range": "string",
+    "pain_points": ["string"],
+    "desires": ["string"]
+  }},
+  "communication_style": "string",
+  "cta_style": "string"
+}}
+
+Brand Input:
 {brand_input}
 
-Rules:
-- Be realistic and professional
-- Do NOT add explanations
-- Do NOT add extra fields
-- Return ONLY JSON
+REMEMBER:
+Return ONLY the JSON object.
 """
+

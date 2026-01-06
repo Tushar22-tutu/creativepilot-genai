@@ -1,59 +1,52 @@
 
-import random
+import requests
+import json
+import re
 
-
-USE_LOCAL_LLM = False   
+USE_LOCAL_LLM = True
 
 
 def call_llm(prompt: str) -> dict:
-    """
-    Central LLM access point.
-    Currently runs in SAFE MOCK MODE.
-    """
-
     if USE_LOCAL_LLM:
         return call_local_llm(prompt)
     else:
-        return mock_llm_response(prompt)
+        return mock_llm_response()
 
 
+# -------- LOCAL LLM (OLLAMA) --------
+def call_local_llm(prompt: str) -> dict:
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "gemma:2b",
+            "prompt": prompt,
+            "stream": False
+        },
+        timeout=60
+    )
 
-def mock_llm_response(prompt: str) -> dict:
-    """
-    Simulated LLM response.
-    Returns dynamic but schema-valid output.
-    """
+    raw_text = response.json().get("response", "")
 
-    tones = [
-        "premium, confident",
-        "bold, energetic",
-        "friendly, professional"
-    ]
+    # 🔒 SAFETY: extract JSON only
+    match = re.search(r"\{.*\}", raw_text, re.DOTALL)
+    if not match:
+        raise ValueError("No valid JSON found in LLM response")
 
-    emotions = [
-        ["trust", "aspiration"],
-        ["confidence", "energy"],
-        ["comfort", "reliability"]
-    ]
+    json_text = match.group()
+    return json.loads(json_text)
 
+
+# -------- MOCK (fallback dev mode) --------
+def mock_llm_response():
     return {
-        "brand_voice": random.choice(tones),
-        "core_emotions": random.choice(emotions),
+        "brand_voice": "professional, confident",
+        "core_emotions": ["trust", "aspiration"],
         "target_audience": {
             "age_range": "25-40",
             "pain_points": ["lack of time", "work stress"],
             "desires": ["healthy lifestyle", "convenience"]
         },
-        "communication_style": "clear, professional",
-        "cta_style": "encouraging"
+        "communication_style": "professional, polished",
+        "cta_style": "subtle, confident"
     }
-
-
-def call_local_llm(prompt: str) -> dict:
-    """
-    Placeholder for Ollama / local LLM.
-    NOT USED right now.
-    """
-    raise NotImplementedError("Local LLM not enabled yet")
-
 
