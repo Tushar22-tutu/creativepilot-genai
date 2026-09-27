@@ -1,0 +1,12 @@
+# Existing runtime deps (previously undeclared -- the project had no
+# requirements.txt at all before this change).
+fastapi
+uvicorn
+pydantic
+requests
+
+# Added for the agentic layer.
+langchain
+langchain-ollama
+langgraph
+fastmcp

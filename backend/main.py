@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.brand_intelligence.analyzer import analyze_brand
 from backend.brand_intelligence.schemas import BrandInput, BrandOutput
 from backend.brand_intelligence.memory import load_memory_from_file
+from backend.agent.graph import run_agent  # ADDED: agentic layer
 
 
 app = FastAPI(
@@ -30,3 +31,9 @@ def health_check():
 @app.post("/analyze-brand", response_model=BrandOutput)
 def analyze_brand_api(brand_input: BrandInput):
     return analyze_brand(brand_input.dict())
+
+# ADDED: agentic route (LangGraph + tools + RAG). Existing /analyze-brand
+# above is untouched and keeps using the original non-agentic pipeline.
+@app.post("/agent/analyze-brand")
+def analyze_brand_agentic(brand_input: BrandInput):
+    return run_agent(brand_input.dict())
