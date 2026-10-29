@@ -281,3 +281,37 @@ Full-Stack & GenAI Enthusiast
 
 CreativePilot is not just a demo —
 it is a foundation for building real, controllable GenAI systems.
+
+---
+
+## 🧪 Automated Testing
+
+CreativePilot includes a `pytest` suite for the brand-analysis pipeline, request/response schemas, and FastAPI endpoint contracts. Tests mock the LLM and agent boundaries, so they do **not** require Ollama to be running or a model to be downloaded.
+
+### 1. Install dependencies
+
+From the repository root (the directory containing `backend/` and `requirements.txt`):
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+The requirements file includes the test tools (`pytest` and `httpx`) along with the app's runtime dependencies.
+
+### 2. Run tests
+
+```bash
+python -m pytest -v
+```
+
+The same command runs automatically on pushes and pull requests using GitHub Actions (`.github/workflows/tests.yml`).
+
+### Coverage
+
+- **Schemas:** valid and invalid brand inputs and output profiles.
+- **Brand analysis:** tone/business-rule application, cached-profile reuse, and safe fallback when the LLM fails.
+- **API contracts:** health check, successful brand analysis, invalid input (`422`), and the agent endpoint with the agent call mocked.
+- **Continuous integration:** a clean Python 3.12 environment installs dependencies and runs the suite.
+
+These are deterministic behavior/contract tests; they do not evaluate real-world LLM quality or verify a live Ollama model. For live agent scenarios, use the separate evaluation script described above, with Ollama and the required models installed.
+
