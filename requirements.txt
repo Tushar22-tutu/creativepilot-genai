@@ -10,3 +10,7 @@ langchain
 langchain-ollama
 langgraph
 fastmcp
+
+# Development and testing
+pytest
+httpx
